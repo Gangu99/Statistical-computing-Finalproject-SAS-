@@ -1,0 +1,289 @@
+ERROR: Java repository file(s) are missing or inaccessible.
+ERROR: Unable to initialize the ODS classpath during SAS startup.
+ERROR: Exception text: For one or more plug-in requests, no matching Plug-ins were found in repository
+NOTE: Copyright (c) 2023 by SAS Institute Inc., Cary, NC, USA.
+NOTE: SAS (r) Proprietary Software 9.4 (TS1M8)
+      Licensed to KENNESAW STATE UNIVERSITY - SFA T&R, Site 70086763.
+NOTE: This session is executing on the X64_WIN+HOME  platform.
+
+
+
+NOTE: Analytical products:
+
+      SAS/STAT 15.3
+      SAS/ETS 15.3
+      SAS/IML 15.3
+      SAS/QC 15.3
+
+NOTE: Additional host information:
+
+ X64_WIN+HOME WIN 10.0.22631  Workstation
+
+NOTE: SAS initialization used:
+      real time           1.09 seconds
+      cpu time            0.20 seconds
+
+1    /*Part - C*/
+2
+3    /*1*/
+4    proc import datafile = "D:\Downloads\Statistical Computing\Final Project\Students.csv"
+5    dbms = csv
+6    out = asgnt.students;
+7    run;
+
+NOTE: Import cancelled.  Output dataset ASGNT.STUDENTS already exists.  Specify REPLACE option to
+      overwrite it.
+NOTE: The SAS System stopped processing this step because of errors.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+
+8
+9    /*2*/
+
+
+10   proc contents data = asgnt.students;
+NOTE: Writing HTML Body file: sashtml.htm
+11   run;
+
+NOTE: PROCEDURE CONTENTS used (Total process time):
+      real time           0.39 seconds
+      cpu time            0.17 seconds
+
+
+12
+13   ods pdf file = "D:\Downloads\Statistical Computing\Final Project\Pinnika_report.pdf";
+NOTE: Writing ODS PDF output to DISK destination
+      "D:\Downloads\Statistical Computing\Final Project\Pinnika_report.pdf", printer "PDF".
+14   /*3*/
+15   data students;
+16     set asgnt.students;
+17     label class = 'Student class'
+18           race = 'Student Race'
+19           gender = 'Student Gender'
+20           GPA = 'Student GPA'
+21           Algebra = 'Student Algebra score'
+22           calculus = 'Student calculus Score'
+23           statistics = 'Student Statistics Score'
+24           Probability = 'Student Probability Score'
+25           y = 'Final Decision';
+26   run;
+
+NOTE: There were 105 observations read from the data set ASGNT.STUDENTS.
+NOTE: The data set WORK.STUDENTS has 105 observations and 10 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.00 seconds
+
+
+27   title "Data with permanent labels";
+28   proc print data = students (obs = 10) label;
+29   run;
+
+NOTE: There were 10 observations read from the data set WORK.STUDENTS.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.00 seconds
+
+
+30   footnote "Students dataset";
+31
+32   /*4*/
+33   proc format;
+34   value Race
+35         1 = 'Indian'
+36         2 = 'African American'
+37         3 = 'Asian'
+38         4 = 'Hispanic'
+39         5 = 'White';
+NOTE: Format RACE has been output.
+40   value y
+41         0 = 'Try again'
+42         1 = 'Success, Inland'
+43         2 = 'Success, Abroad';
+NOTE: Format Y has been output.
+44   run;
+
+NOTE: PROCEDURE FORMAT used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.00 seconds
+
+
+45
+46   /*5*/
+47   proc sort data=students;
+48    by id;
+49   run;
+
+NOTE: There were 105 observations read from the data set WORK.STUDENTS.
+NOTE: The data set WORK.STUDENTS has 105 observations and 10 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+
+
+50   title "sorted data";
+51   proc print data=students (obs=10) label;
+52   format race race. y y.;
+53   run;
+
+NOTE: There were 10 observations read from the data set WORK.STUDENTS.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.00 seconds
+
+
+54   footnote "Students datset";
+55
+56   /*6*/
+57   data students1;
+58    set students;
+59    if calculus > 70 then output;
+60    drop race ID GPA;
+61   run;
+
+NOTE: There were 105 observations read from the data set WORK.STUDENTS.
+NOTE: The data set WORK.STUDENTS1 has 63 observations and 7 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+
+
+62   title "Subsetted data";
+63   proc print data=students1 (obs=10) label;
+64   format y y.;
+65   run;
+
+NOTE: There were 10 observations read from the data set WORK.STUDENTS1.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.00 seconds
+
+
+66   footnote "Students Dataset";
+67
+68   /*7*/
+69   data students2;
+70    set students;
+71    if algebra>70 and calculus>70 then Feedback = 'Excellent';
+72    else Feedback = 'Good';
+73    drop race ID GPA;
+74   run;
+
+NOTE: There were 105 observations read from the data set WORK.STUDENTS.
+NOTE: The data set WORK.STUDENTS2 has 105 observations and 8 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+
+
+75   title "Students data with new variable";
+76   proc print data = students2 (obs=10)label ;
+77   format y y.;
+78   run;
+
+NOTE: There were 10 observations read from the data set WORK.STUDENTS2.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.01 seconds
+
+
+79   footnote "Students Dataset";
+80
+81   /*8*/
+82   title "Frequency table with 2 variables";
+83   proc freq data=students ;
+84     tables class*y / nocum nopercent norow;
+85     format race race. y y.;
+86   run;
+
+NOTE: There were 105 observations read from the data set WORK.STUDENTS.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.11 seconds
+      cpu time            0.00 seconds
+
+
+87   proc sort data=students;
+88   by y ;
+89   run;
+
+NOTE: There were 105 observations read from the data set WORK.STUDENTS.
+NOTE: The data set WORK.STUDENTS has 105 observations and 10 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+
+
+90   title "Frequency table using by statement";
+91   proc freq data=students ;
+92   by y ;
+93   tables gender*y / nocum nopercent norow;
+94   format race race. y y.;
+95   run;
+
+NOTE: There were 105 observations read from the data set WORK.STUDENTS.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.09 seconds
+      cpu time            0.00 seconds
+
+
+96   footnote "Students Dataset";
+97
+98   /*9*/
+99   title "Average scores in Statistics,Probability and average GPA";
+100  proc means data=students n mean std var min max maxdec=2 ;
+101   var Statistics probability;
+102  run;
+
+NOTE: There were 105 observations read from the data set WORK.STUDENTS.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.00 seconds
+
+
+103  footnote "Students dataset";
+104
+105  /*10*/
+106  proc summary data = students sum print;
+107  var Algebra calculus probability;
+108  run;
+
+NOTE: There were 105 observations read from the data set WORK.STUDENTS.
+NOTE: PROCEDURE SUMMARY used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.00 seconds
+
+
+109
+110  %let macro = Great;/*Creating Macro Variable*/
+111  data students3 ;
+112    set students;
+113     Decision = "&macro";
+114    do i = 40;
+115       sub = algebra - i;
+116       output;
+117    end;
+118    drop i;
+119  run;
+
+NOTE: There were 105 observations read from the data set WORK.STUDENTS.
+NOTE: The data set WORK.STUDENTS3 has 105 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.00 seconds
+
+
+120  title "Modified data using macro variable & do loop";
+121  proc print data = students3 (obs=10) label;
+122  var Gender Algebra decision sub ;
+123  run;
+
+NOTE: There were 10 observations read from the data set WORK.STUDENTS3.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.01 seconds
+
+
+124  footnote "Students Dataset";
+125  ods pdf close;
+NOTE: ODS PDF printed 11 pages to D:\Downloads\Statistical Computing\Final Project\Pinnika_report.pdf.
