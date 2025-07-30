@@ -1,0 +1,88 @@
+BULK INSERT Students
+FROM 'D:\Downloads\Statistical Computing\Final Project\Students.csv'
+WITH (
+    FIELDTERMINATOR = ',',
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2
+);
+
+SELECT COLUMN_NAME, DATA_TYPE
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'Students';
+
+SELECT 
+  class AS [Student Class],
+  race AS [Student Race],
+  gender AS [Student Gender],
+  GPA AS [Student GPA],
+  Algebra AS [Student Algebra Score],
+  Calculus AS [Student Calculus Score],
+  Statistics AS [Student Statistics Score],
+  Probability AS [Student Probability Score],
+  y AS [Final Decision]
+FROM Students;
+
+SELECT *,
+  CASE 
+    WHEN race = 1 THEN 'Indian'
+    WHEN race = 2 THEN 'African American'
+    WHEN race = 3 THEN 'Asian'
+    WHEN race = 4 THEN 'Hispanic'
+    WHEN race = 5 THEN 'White'
+    ELSE 'Unknown'
+  END AS Race_Label,
+  CASE 
+    WHEN y = 0 THEN 'Try again'
+    WHEN y = 1 THEN 'Success, Inland'
+    WHEN y = 2 THEN 'Success, Abroad'
+    ELSE 'Unknown'
+  END AS Final_Decision_Label
+FROM Students;
+
+SELECT * 
+FROM Students
+ORDER BY ID;
+
+SELECT Calculus, Algebra, Statistics, Probability, Gender, Class, y
+FROM Students
+WHERE Calculus > 70;
+
+SELECT 
+  *,
+  CASE 
+    WHEN Algebra > 70 AND Calculus > 70 THEN 'Excellent'
+    ELSE 'Good'
+  END AS Feedback
+FROM Students;
+
+SELECT Class, y, COUNT(*) AS Count
+FROM Students
+GROUP BY Class, y;
+
+SELECT y, Gender, COUNT(*) AS Count
+FROM Students
+GROUP BY y, Gender;
+
+SELECT 
+  AVG(Statistics) AS Avg_Statistics,
+  STDEV(Statistics) AS Std_Statistics,
+  VAR(Statistics) AS Var_Statistics,
+  MIN(Statistics) AS Min_Statistics,
+  MAX(Statistics) AS Max_Statistics,
+  AVG(Probability) AS Avg_Probability,
+  AVG(GPA) AS Avg_GPA
+FROM Students;
+
+SELECT 
+  SUM(Algebra) AS Total_Algebra,
+  SUM(Calculus) AS Total_Calculus,
+  SUM(Probability) AS Total_Probability
+FROM Students;
+
+SELECT 
+  Gender,
+  Algebra,
+  'Great' AS Decision,
+  Algebra - 40 AS Sub
+FROM Students;
+
